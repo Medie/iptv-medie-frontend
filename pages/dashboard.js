@@ -94,35 +94,37 @@ export default function DashboardPage() {
             Browse all channels from a single unified playlist with instant category filtering.
           </p>
         </div>
-        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
-          <div className="flex gap-3">
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search channels, descriptions, tags..."
-              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 md:w-72"
+              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:w-72"
             />
-            <button
-              type="button"
-              onClick={() => mutate()}
-              className="rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 transition hover:border-primary hover:text-primary dark:border-slate-700 dark:text-slate-200"
-            >
-              Refresh
-            </button>
-            <button
-              type="button"
-              onClick={handleDownloadPlaylist}
-              disabled={isGeneratingPlaylist}
-              className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-primary/80 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isGeneratingPlaylist ? 'Generating...' : 'Download M3U8'}
-            </button>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => mutate()}
+                className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 transition hover:border-primary hover:text-primary dark:border-slate-700 dark:text-slate-200 sm:flex-none"
+              >
+                Refresh
+              </button>
+              <button
+                type="button"
+                onClick={handleDownloadPlaylist}
+                disabled={isGeneratingPlaylist}
+                className="flex-1 rounded-md bg-primary px-4 py-2 text-sm font-medium text-slate-900 transition hover:bg-primary/80 disabled:opacity-50 disabled:cursor-not-allowed sm:flex-none"
+              >
+                {isGeneratingPlaylist ? 'Generating...' : 'Download M3U8'}
+              </button>
+            </div>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <select
               value={categoryFilter}
               onChange={(event) => setCategoryFilter(event.target.value)}
-              className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:w-auto"
             >
               <option value="all">All categories</option>
               {filterOptions.categories.map((category) => (
@@ -134,7 +136,7 @@ export default function DashboardPage() {
             <select
               value={regionFilter}
               onChange={(event) => setRegionFilter(event.target.value)}
-              className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:w-auto"
             >
               <option value="all">All regions</option>
               {filterOptions.regions.map((region) => (
@@ -146,7 +148,7 @@ export default function DashboardPage() {
             <select
               value={languageFilter}
               onChange={(event) => setLanguageFilter(event.target.value)}
-              className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:w-auto"
             >
               <option value="all">All languages</option>
               {filterOptions.languages.map((language) => (
