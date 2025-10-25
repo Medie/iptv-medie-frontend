@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import useSWR from "swr";
 import Layout from "../components/Layout";
-import PlaylistCard from "../components/PlaylistCard";
+import ChannelCard from "../components/ChannelCard";
 import { fetchUnifiedPlaylist, generateUnifiedM3U8, API_BASE_URL } from "../lib/api";
 import { useProtectedRoute } from "../hooks/useProtectedRoute";
 
@@ -291,15 +291,15 @@ export default function DashboardPage() {
             </div>
           )}
           
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {filtered.map((channel) => (
-              <PlaylistCard
+              <ChannelCard
                 key={channel.id}
-                title={channel.title}
-                group={channel.groupTitle}
-                language={channel.language}
-                region={channel.region}
-                href={`${API_BASE_URL}${channel.streamUrl}`}
+                channel={{
+                  ...channel,
+                  categoryLabel: channel.groupTitle,
+                  streamUrl: `${API_BASE_URL}${channel.streamUrl}`
+                }}
               />
             ))}
             {filtered.length === 0 && (
