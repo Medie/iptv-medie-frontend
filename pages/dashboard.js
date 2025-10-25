@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useRouter } from "next/router";
 import useSWR from "swr";
 import Layout from "../components/Layout";
 import ChannelCard from "../components/ChannelCard";
@@ -8,6 +9,7 @@ import { useProtectedRoute } from "../hooks/useProtectedRoute";
 const fetcher = () => fetchUnifiedPlaylist();
 
 export default function DashboardPage() {
+  const router = useRouter();
   const { loading: authLoading, user } = useProtectedRoute();
   const { data, isLoading, error, mutate } = useSWR("unified-playlist", fetcher, {
     revalidateOnFocus: false
@@ -18,6 +20,24 @@ export default function DashboardPage() {
   const [languageFilter, setLanguageFilter] = useState("all");
   const [isGeneratingPlaylist, setIsGeneratingPlaylist] = useState(false);
   const [showPlayerSuggestions, setShowPlayerSuggestions] = useState(false);
+
+  // Function to convert category name to URL slug
+  const categoryToSlug = (categoryName) => {
+    return categoryName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+  };
+
+  // Handle category selection - navigate to category page if not "all"
+  const handleCategoryChange = (category) => {
+    if (category === "all") {
+      setCategoryFilter("all");
+    } else {
+      const slug = categoryToSlug(category);
+      router.push(`/categories/${slug}`);
+    }
+  };
 
   const filterOptions = useMemo(() => {
     const categories = new Set();
@@ -140,7 +160,7 @@ export default function DashboardPage() {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-3">
             <select
               value={categoryFilter}
-              onChange={(event) => setCategoryFilter(event.target.value)}
+              onChange={(event) => handleCategoryChange(event.target.value)}
               className="w-full rounded-md border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:w-auto sm:py-2 sm:text-sm"
             >
               <option value="all">All categories</option>
