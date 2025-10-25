@@ -17,6 +17,7 @@ export default function DashboardPage() {
   const [regionFilter, setRegionFilter] = useState("all");
   const [languageFilter, setLanguageFilter] = useState("all");
   const [isGeneratingPlaylist, setIsGeneratingPlaylist] = useState(false);
+  const [showPlayerSuggestions, setShowPlayerSuggestions] = useState(false);
 
   const filterOptions = useMemo(() => {
     const categories = new Set();
@@ -54,20 +55,15 @@ export default function DashboardPage() {
     return matchesQuery && matchesCategory && matchesRegion && matchesLanguage;
   });
 
-  const handleDownloadPlaylist = async () => {
+  const handleCopyPlaylist = async () => {
     setIsGeneratingPlaylist(true);
     try {
       const m3u8Url = await generateUnifiedM3U8();
-      // Create a temporary link to download the M3U8 file
-      const link = document.createElement('a');
-      link.href = m3u8Url;
-      link.download = 'medie-unified-playlist.m3u8';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      await navigator.clipboard.writeText(m3u8Url);
+      // Show success feedback (we'll add this in the button state)
     } catch (error) {
-      console.error('Failed to generate playlist:', error);
-      alert('Failed to generate unified playlist. Please try again.');
+      console.error('Failed to copy playlist URL:', error);
+      alert('Failed to copy unified playlist URL. Please try again.');
     } finally {
       setIsGeneratingPlaylist(false);
     }
@@ -87,40 +83,98 @@ export default function DashboardPage() {
 
   return (
     <Layout title="Dashboard">
-      <section className="mb-8 flex flex-col gap-6 rounded-xl border border-slate-200 bg-white/80 p-6 dark:border-slate-800 dark:bg-slate-900/40 md:flex-row md:items-center md:justify-between">
+      <section className="mb-8 flex flex-col gap-6 rounded-xl border border-slate-200 bg-white/80 p-6 dark:border-slate-800 dark:bg-slate-900/40">
         <div>
-          <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Unified Channel Library</h2>
           <p className="text-sm text-slate-600 dark:text-slate-400">
-            Browse all channels from a single unified playlist with instant category filtering.
+            Watch all channels from a single playlist. Press “M3U8” to copy it and open it in your preferred IPTV player
           </p>
         </div>
         <div className="flex flex-col gap-4">
           {/* Search and Actions Row */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-2">
+  <input
+    value={query}
+    onChange={(event) => setQuery(event.target.value)}
+    placeholder="Search channels..."
+    className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:flex-[2]"
+  />
+  <div className="flex gap-1 sm:w-auto">
+    <button
+      type="button"
+      onClick={() => mutate()}
+      className="flex-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 shadow-sm transition hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-primary dark:hover:bg-primary/10"
+    >
+      <div className="flex items-center justify-center gap-1">
+        <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+        Refresh
+      </div>
+    </button>
+    <button
+      type="button"
+      onClick={handleCopyPlaylist}
+      disabled={isGeneratingPlaylist}
+      className="flex-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 shadow-sm transition hover:border-primary hover:bg-primary/5 hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-primary dark:hover:bg-primary/10"
+    >
+      <div className="flex items-center justify-center gap-1">
+        {isGeneratingPlaylist ? (
+          <svg className="h-3.5 w-3.5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        ) : (
+          <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+        )}
+        {isGeneratingPlaylist ? 'Copying...' : 'M3U8'}
+      </div>
+    </button>
+  </div>
+</div>
+
+       {/*    <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch sm:gap-4">
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search channels, descriptions, tags..."
-              className="w-full rounded-md border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:flex-1 sm:py-2 sm:text-sm"
+              className="w-full rounded-md border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 sm:flex-[2] sm:py-3 sm:text-sm"
             />
-            <div className="flex flex-col gap-3 sm:flex-row sm:gap-2">
+            <div className="flex gap-2 sm:items-stretch sm:w-auto">
               <button
                 type="button"
                 onClick={() => mutate()}
-                className="w-full rounded-md border border-slate-300 bg-white px-4 py-3 text-base font-medium text-slate-700 transition hover:border-primary hover:text-primary dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 sm:w-auto sm:px-3 sm:py-2 sm:text-sm"
+                className="flex-1 rounded-md border border-slate-300 bg-white px-3 py-3 text-sm font-medium text-slate-700 shadow-sm transition hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-primary dark:hover:bg-primary/10 sm:px-4 sm:py-3"
               >
-                Refresh
+                <div className="flex items-center justify-center gap-1">
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  Refresh
+                </div>
               </button>
               <button
                 type="button"
-                onClick={handleDownloadPlaylist}
+                onClick={handleCopyPlaylist}
                 disabled={isGeneratingPlaylist}
-                className="w-full rounded-md bg-primary px-4 py-3 text-base font-medium text-slate-900 transition hover:bg-primary/80 disabled:opacity-50 disabled:cursor-not-allowed sm:w-auto sm:px-4 sm:py-2 sm:text-sm"
+                className="flex-1 rounded-md border border-slate-300 bg-white px-3 py-3 text-sm font-medium text-slate-700 shadow-sm transition hover:border-primary hover:bg-primary/5 hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:border-primary dark:hover:bg-primary/10 sm:px-4 sm:py-3"
               >
-                {isGeneratingPlaylist ? 'Generating...' : 'Download M3U8'}
+                <div className="flex items-center justify-center gap-1">
+                  {isGeneratingPlaylist ? (
+                    <svg className="h-4 w-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                  ) : (
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  )}
+                  {isGeneratingPlaylist ? 'Copying...' : 'Copy M3U8'}
+                </div>
               </button>
             </div>
-          </div>
+          </div> */}
           
           {/* Filter Row */}
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-3">
@@ -172,23 +226,129 @@ export default function DashboardPage() {
       )}
 
       {!isLoading && !error && (
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((channel) => (
-            <PlaylistCard
-              key={channel.id}
-              title={channel.title}
-              group={channel.groupTitle}
-              language={channel.language}
-              region={channel.region}
-              href={`${API_BASE_URL}${channel.streamUrl}`}
-            />
-          ))}
-          {filtered.length === 0 && (
-            <p className="col-span-full text-center text-slate-500 dark:text-slate-400">
-              No channels matched your filters.
-            </p>
+        <>
+          {filtered.length > 0 && (
+            <div className="mb-6">
+              {/* Toggle button for mobile */}
+              <button
+                onClick={() => setShowPlayerSuggestions(!showPlayerSuggestions)}
+                className="mb-3 flex w-full items-center justify-between rounded-lg bg-blue-50 p-4 text-left dark:bg-blue-900/20 sm:hidden"
+              >
+                <span className="text-sm font-semibold text-blue-900 dark:text-blue-100">
+                  Recommended IPTV Players
+                </span>
+                <svg
+                  className={`h-4 w-4 transform text-blue-600 transition-transform dark:text-blue-400 ${
+                    showPlayerSuggestions ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* Player suggestions - always visible on desktop, toggle on mobile */}
+              <div
+                className={`rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20 ${
+                  showPlayerSuggestions ? "block" : "hidden sm:block"
+                }`}
+              >
+                <h3 className="mb-3 hidden text-sm font-semibold text-blue-900 dark:text-blue-100 sm:block">
+                  Recommended IPTV Players
+                </h3>
+                <div className="grid grid-cols-2 gap-3 text-xs text-blue-700 dark:text-blue-300 sm:grid-cols-2 lg:grid-cols-4">
+  <div>
+    <strong className="text-blue-800 dark:text-blue-200">Desktop:</strong>
+    <ul className="mt-1 space-y-1">
+      <li>• VLC Media Player</li>
+      <li>• IPTV Smarters Pro</li>
+      <li>• Kodi with IPTV addons</li>
+    </ul>
+  </div>
+  <div>
+    <strong className="text-blue-800 dark:text-blue-200">Mobile:</strong>
+    <ul className="mt-1 space-y-1">
+      <li>• IPTV Smarters</li>
+      <li>• TiviMate</li>
+      <li>• OTT Navigator</li>
+    </ul>
+  </div>
+  <div>
+    <strong className="text-blue-800 dark:text-blue-200">Smart TV:</strong>
+    <ul className="mt-1 space-y-1">
+      <li>• Smart IPTV</li>
+      <li>• SS IPTV</li>
+      <li>• IPTV Extreme</li>
+    </ul>
+  </div>
+  <div>
+    <strong className="text-blue-800 dark:text-blue-200">Streaming Box:</strong>
+    <ul className="mt-1 space-y-1">
+      <li>• TiviMate (Android TV)</li>
+      <li>• IPTV Smarters Pro</li>
+      <li>• Perfect Player</li>
+    </ul>
+  </div>
+</div>
+
+             {/*    <div className="grid gap-4 text-xs text-blue-700 dark:text-blue-300 sm:grid-cols-2 lg:grid-cols-4">
+                  <div>
+                    <strong className="text-blue-800 dark:text-blue-200">Desktop:</strong>
+                    <ul className="mt-2 space-y-1">
+                      <li>• VLC Media Player</li>
+                      <li>• IPTV Smarters Pro</li>
+                      <li>• Kodi with IPTV addons</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <strong className="text-blue-800 dark:text-blue-200">Mobile:</strong>
+                    <ul className="mt-2 space-y-1">
+                      <li>• IPTV Smarters</li>
+                      <li>• TiviMate</li>
+                      <li>• OTT Navigator</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <strong className="text-blue-800 dark:text-blue-200">Smart TV:</strong>
+                    <ul className="mt-2 space-y-1">
+                      <li>• Smart IPTV</li>
+                      <li>• SS IPTV</li>
+                      <li>• IPTV Extreme</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <strong className="text-blue-800 dark:text-blue-200">Streaming Box:</strong>
+                    <ul className="mt-2 space-y-1">
+                      <li>• TiviMate (Android TV)</li>
+                      <li>• IPTV Smarters Pro</li>
+                      <li>• Perfect Player</li>
+                    </ul>
+                  </div>
+                </div> */}
+              </div>
+            </div>
           )}
-        </div>
+          
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((channel) => (
+              <PlaylistCard
+                key={channel.id}
+                title={channel.title}
+                group={channel.groupTitle}
+                language={channel.language}
+                region={channel.region}
+                href={`${API_BASE_URL}${channel.streamUrl}`}
+              />
+            ))}
+            {filtered.length === 0 && (
+              <p className="col-span-full text-center text-slate-500 dark:text-slate-400">
+                No channels matched your filters.
+              </p>
+            )}
+          </div>
+        </>
       )}
     </Layout>
   );
