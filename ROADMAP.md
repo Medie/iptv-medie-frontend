@@ -32,22 +32,28 @@
 - [x] Unified playlist endpoint integration
 - [x] Client-side filtering by group-title
 - [x] Enhanced search across channel library
-- [x] M3U8 download functionality
+- [x] M3U8 copy functionality (replaced download)
 - [x] Responsive TV-style grid layout
 - [x] Light/dark theme
 - [x] Search functionality
 - [x] Region/language filters
 - [x] Category organization (Movies, Sports, Kids, News, NSFW)
+- [x] Unified card design across all pages
+- [x] Navigation from dashboard to category pages
 
 #### Progress (Oct 25, 2025)
 - [x] Auth context with JWT storage, protected routing, and login UX refresh
 - [x] Unified playlist system with single M3U8 source
 - [x] Dashboard filtering by group-title with instant category switching
 - [x] Enhanced search across channels, descriptions, and tags
-- [x] M3U8 download functionality for unified playlist
+- [x] M3U8 copy functionality for unified playlist (replaced download)
 - [x] Category explorer with TV-style grid + region/language controls
 - [x] Account screen for plan overview, devices, add-ons, and renewal actions
 - [x] Admin table polish with role gating and API fallbacks
+- [x] **NEW**: Unified card design across dashboard and category pages
+- [x] **NEW**: Navigation from dashboard to dedicated category pages
+- [x] **NEW**: Improved mobile layout with consistent button heights
+- [x] **NEW**: Toggleable IPTV player recommendations on all devices
 - [ ] Remaining: channel playback preview, analytics widgets, admin write actions
 
 ### 📋 Phase 3 — Admin Panel
