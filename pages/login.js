@@ -38,8 +38,19 @@ export default function LoginPage() {
         <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white/90 p-8 shadow-lg dark:border-slate-800 dark:bg-slate-900/60">
           <h1 className="mb-2 text-2xl font-semibold">Sign in to Medie IPTV</h1>
           <p className="mb-6 text-sm text-slate-500 dark:text-slate-400">
-            Use the credentials provided by your administrator.
+            Use any demo account with password "demo" to login without a database connection.
           </p>
+          <div className="mb-6 rounded-md bg-slate-100 p-3 text-xs dark:bg-slate-800">
+            <p className="mb-2 font-semibold">Demo Accounts:</p>
+            <ul className="space-y-1 text-slate-600 dark:text-slate-300">
+              <li>• demo@medie.vip (Admin - Global Access)</li>
+              <li>• sport@medie.vip (Sports - UK/India/SA/Japan)</li>
+              <li>• kids@medie.vip (Kids - Spain/Mexico/Kenya/China)</li>
+              <li>• africa@medie.vip (Africa - Nigeria/SA/Kenya/Egypt/Senegal)</li>
+              <li>• asia@medie.vip (Asia - India/China/Japan/Singapore)</li>
+            </ul>
+            <p className="mt-2 text-slate-500 dark:text-slate-400">Password for all: demo</p>
+          </div>
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <label className="text-sm text-slate-600 dark:text-slate-300">
               Username

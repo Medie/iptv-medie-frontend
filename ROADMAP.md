@@ -29,7 +29,10 @@
 - [x] JWT login + token persistence
 - [x] User session management
 - [x] Protected routes
-- [x] Fetch channels via backend API
+- [x] Unified playlist endpoint integration
+- [x] Client-side filtering by group-title
+- [x] Enhanced search across channel library
+- [x] M3U8 download functionality
 - [x] Responsive TV-style grid layout
 - [x] Light/dark theme
 - [x] Search functionality
@@ -38,7 +41,10 @@
 
 #### Progress (Oct 25, 2025)
 - [x] Auth context with JWT storage, protected routing, and login UX refresh
-- [x] Dashboard filtering, theme toggle, and AI playlist surfacing
+- [x] Unified playlist system with single M3U8 source
+- [x] Dashboard filtering by group-title with instant category switching
+- [x] Enhanced search across channels, descriptions, and tags
+- [x] M3U8 download functionality for unified playlist
 - [x] Category explorer with TV-style grid + region/language controls
 - [x] Account screen for plan overview, devices, add-ons, and renewal actions
 - [x] Admin table polish with role gating and API fallbacks
