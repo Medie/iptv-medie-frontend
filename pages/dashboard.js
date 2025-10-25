@@ -87,7 +87,7 @@ export default function DashboardPage() {
 
   return (
     <Layout title="Dashboard">
-      <section className="mb-8 flex flex-col gap-4 rounded-xl border border-slate-200 bg-white/80 p-6 dark:border-slate-800 dark:bg-slate-900/40 sm:flex-row sm:items-center sm:justify-between">
+      <section className="mb-8 flex flex-col gap-6 rounded-xl border border-slate-200 bg-white/80 p-6 dark:border-slate-800 dark:bg-slate-900/40 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Unified Channel Library</h2>
           <p className="text-sm text-slate-600 dark:text-slate-400">
